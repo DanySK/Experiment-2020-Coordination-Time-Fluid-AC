@@ -6,3 +6,5 @@ build
 .idea/
 data_summary_*
 timeprocessed
+out/
+test.txt
