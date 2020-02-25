@@ -1,5 +1,19 @@
 incarnation: protelis
 
+variables:
+  seed: &seed
+    min: 0
+    max: 99
+    step: 1
+    default: 0
+  speed: &speed
+    formula: 10
+
+seed:
+  scenario: *seed
+  simulation: *seed
+
+
 network-model:
   type: ConnectWithinDistance
   parameters: [0.5]
@@ -15,7 +29,23 @@ gradient: &gradient
     program: org:protelis:tutorial:distanceTo
   - program: send
 
+movement: &movement
+  - time-distribution: *speed
+    type: Event
+    actions:
+      - type: MoveForwardAndTeleport
+        parameters: [0.01, -5, 5]
+
 displacements:
+  - in:
+      type: Point
+      parameters: [-5, 4.2]
+    contents:
+      - molecule: source
+        concentration: true
+    programs:
+      - *gradient
+      - *movement
   - in:
       type: Grid
       parameters: [-5, -5, 5, 5, 0.25, 0.25, 0.1, 0.1]
