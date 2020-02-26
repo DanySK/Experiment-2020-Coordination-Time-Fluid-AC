@@ -1,6 +1,0 @@
-module org:protelis:tutorial:distanceTo
-import protelis:coord:spreading
-
-env.put("roundCount", rep(x <- 0) { x + 1 })
-env.put("lastExecuted", self.getCurrentTime())
-distanceTo(optionally(env.get("source")).orElse(false))

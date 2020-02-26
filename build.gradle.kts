@@ -27,6 +27,8 @@ sourceSets {
 dependencies {
     implementation("org.jgrapht:jgrapht-core:1.3.1")
     implementation("it.unibo.alchemist:alchemist:9.3.0")
+    implementation("org.apache.commons:commons-lang3:3.9")
+    implementation("org.slf4j:slf4j-api:1.8.0-beta2")
     implementation(kotlin("stdlib-jdk8"))
 }
 
@@ -95,7 +97,7 @@ File(rootProject.rootDir.path + "/src/main/yaml").listFiles()
             args(
                 "-e", "data/${it.nameWithoutExtension}",
                 "-b",
-                "-var", "seed", "speed",
+                "-var", "seed", "reactivity", "speed",
                 "-p", threadCount,
                 "-i", 1
             )

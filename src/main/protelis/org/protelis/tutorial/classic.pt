@@ -1,0 +1,7 @@
+module org:protelis:tutorial:classic
+import protelis:coord:spreading
+import org:protelis:tutorial:distances
+
+env.put("classicrc", rep(x <- 0) { x + 1 })
+injectDistance()
+distanceTo(optionally(env.get("source")).orElse(false))

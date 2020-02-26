@@ -1,0 +1,7 @@
+module org:protelis:tutorial:reactive
+import protelis:coord:spreading
+import org:protelis:tutorial:distances
+
+injectDistance()
+env.put("reactiverc", rep(x <- 0) { x + 1 })
+distanceTo(optionally(env.get("source")).orElse(false))

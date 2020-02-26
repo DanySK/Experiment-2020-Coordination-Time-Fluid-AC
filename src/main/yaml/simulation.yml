@@ -7,13 +7,15 @@ variables:
     step: 1
     default: 0
   speed: &speed
-    formula: 10
+    type: ArbitraryVariable
+    parameters: [10, [0, 1, 2, 5, 10]]
   reactivity: &reactivity
-    formula: 100
+    type: ArbitraryVariable
+    parameters: [10, [0.1, 0.3, 1, 3, 10, 30, 100]]
   retentionTime: &retention
     formula: 10
   retentionFrequency: &retentionFrequency
-    formula: 1
+    formula: Math.min(1, reactivity)
 
 seed:
   scenario: *seed
@@ -28,7 +30,7 @@ reactiveGradient: &reactive
     type: ChemicalReaction
     actions:
       - type: RunProtelisProgram
-        parameters: [org:protelis:tutorial:distanceTo, *retention]
+        parameters: [org:protelis:tutorial:reactive, *retention]
     conditions:
       - type: NewMessageReceivedOrPositionChanged
   - program: send
@@ -36,8 +38,8 @@ reactiveGradient: &reactive
     program: 1//self.getCurrentTime()
 
 gradient: &gradient
-  - time-distribution: 1
-    program: org:protelis:tutorial:distanceTo
+  - time-distribution: *reactivity
+    program: org:protelis:tutorial:classic
   - program: send
 
 
@@ -56,6 +58,7 @@ displacements:
       - molecule: source
         concentration: true
     programs:
+      - *gradient
       - *reactive
       - *movement
   - in:
@@ -64,8 +67,9 @@ displacements:
     contents:
       - in:
           type: Rectangle
-          parameters: [-6, -6, 2, 2]
+          parameters: [-4.95, -4.95, 0.4, 0.4]
         molecule: source
         concentration: true
     programs:
+      - *gradient
       - *reactive
