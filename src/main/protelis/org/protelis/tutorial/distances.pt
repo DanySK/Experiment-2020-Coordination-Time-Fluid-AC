@@ -1,5 +1,7 @@
 module org:protelis:tutorial:distances
 
-public def injectDistance() {
-    env.put("actual", [0, 1].map { self.distanceTo(it) }.min(POSITIVE_INFINITY))
+public def actualDistance() {
+    let result = [0, 1].map { self.distanceTo(it) }.min(POSITIVE_INFINITY)
+    env.put("actual", result)
+    result
 }

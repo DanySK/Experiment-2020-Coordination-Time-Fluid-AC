@@ -95,7 +95,7 @@
       "val": 32
     },
     "molFilter": true,
-    "molString": "roundCount",
+    "molString": "reactiverc",
     "molPropertyFilter": true,
     "property": "",
     "writingPropertyValue": false,
@@ -156,7 +156,7 @@
       "val": 9
     },
     "molFilter": true,
-    "molString": "org:protelis:tutorial:distanceTo",
+    "molString": "org:protelis:tutorial:reactive",
     "molPropertyFilter": true,
     "property": "",
     "writingPropertyValue": false,

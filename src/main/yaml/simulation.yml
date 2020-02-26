@@ -11,15 +11,28 @@ variables:
     parameters: [10, [0, 1, 2, 5, 10]]
   reactivity: &reactivity
     type: ArbitraryVariable
-    parameters: [10, [0.1, 0.3, 1, 3, 10, 30, 100]]
+    parameters: [1.1, [0.8, 0.9, 1, 1.1, 1.2, 1.5, 2]]
   retentionTime: &retention
     formula: 10
   retentionFrequency: &retentionFrequency
-    formula: Math.min(1, reactivity)
+    formula: 10 * reactivity //Math.min(1, reactivity)
 
 seed:
   scenario: *seed
   simulation: *seed
+
+export:
+  - time
+  - molecule: classicrc
+    aggregators: [mean, standarddeviation]
+    value-filter: onlyfinite
+  - molecule: reactiverc
+    aggregators: [mean, standarddeviation]
+    value-filter: onlyfinite
+  - molecule: errorclassic
+    aggregators: [mean, standarddeviation]
+  - molecule: errorreactive
+    aggregators: [mean, standarddeviation]
 
 network-model:
   type: ConnectWithinDistance
@@ -27,19 +40,26 @@ network-model:
 
 reactiveGradient: &reactive
   - time-distribution: *reactivity
+#  - time-distribution:
+#      type: ReactiveUniform
+#      parameters: [*reactivity]
     type: ChemicalReaction
     actions:
       - type: RunProtelisProgram
         parameters: [org:protelis:tutorial:reactive, *retention]
     conditions:
       - type: NewMessageReceivedOrPositionChanged
+        parameters: [org:protelis:tutorial:reactive]
   - program: send
   - time-distribution: *retentionFrequency
     program: 1//self.getCurrentTime()
 
 gradient: &gradient
-  - time-distribution: *reactivity
-    program: org:protelis:tutorial:classic
+  - time-distribution: 1
+    type: Event
+    actions:
+      - type: RunProtelisProgram
+        parameters: [org:protelis:tutorial:classic, *retention]
   - program: send
 
 
@@ -53,7 +73,7 @@ movement: &movement
 displacements:
   - in:
       type: Point
-      parameters: [-5, 4.2]
+      parameters: [-5, 5]
     contents:
       - molecule: source
         concentration: true
@@ -73,3 +93,7 @@ displacements:
     programs:
       - *gradient
       - *reactive
+
+terminate:
+  - type: AfterTime
+    parameters: [250]

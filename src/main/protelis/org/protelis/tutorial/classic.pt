@@ -3,5 +3,7 @@ import protelis:coord:spreading
 import org:protelis:tutorial:distances
 
 env.put("classicrc", rep(x <- 0) { x + 1 })
-injectDistance()
-distanceTo(optionally(env.get("source")).orElse(false))
+let result = distanceTo(optionally(env.get("source")).orElse(false))
+let actual = actualDistance()
+env.put("errorclassic", abs(actual - result))
+result
