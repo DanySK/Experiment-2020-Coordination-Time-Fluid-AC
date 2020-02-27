@@ -187,10 +187,10 @@ if __name__ == '__main__':
     experiments = ['simulation']
     floatPrecision = '{: 0.3f}'
     # Number of time samples 
-    timeSamples = 100
+    timeSamples = 250
     # time management
     minTime = 0
-    maxTime = 50
+    maxTime = 250
     timeColumnName = 'time'
     logarithmicTime = False
     # One or more variables are considered random and "flattened"
@@ -404,6 +404,73 @@ if __name__ == '__main__':
     for experiment in experiments:
         current_experiment_means = means[experiment]
         current_experiment_errors = stdevs[experiment]
-        generate_all_charts(current_experiment_means, current_experiment_errors, basedir = f'{experiment}/all')
+        generate_all_charts(current_experiment_means, current_experiment_errors, basedir = 'all')
         
 # Custom charting
+    timeline = means[experiment][timeColumnName]
+    for speed in means[experiment]['speed']:
+        data = means[experiment].sel({'speed': speed})
+        # Error
+        current_metric = 'errorreactive[Mean]'
+        comparison_metric = 'errorclassic[Mean]'
+        title = f'Error when {label_for("speed")}={beautifyValue(speed)}'
+        ydata = {
+            f'f={beautifyValue(label)}': (data.sel(selector)[current_metric], 0)
+            for label in data['reactivity'].values
+            for selector in [{ 'reactivity': label }]
+        }
+        fig, ax = make_line_chart(
+            title = title,
+            xdata = timeline,
+            xlabel = unit_for(timeColumnName),
+            ylabel = "Mean squared error",
+            ydata = ydata,
+            colors = cmx.viridis,
+            linewidth='2'
+        )
+        ax.plot(timeline, data.sel({'reactivity': 1.0})[comparison_metric], label='classic', color='red', linewidth='3')
+        ax.set_yscale('log')
+        ax.legend()
+        fig.savefig(f'{output_directory}/error_speed{beautifyValue(speed)}.pdf')
+        # Rounds
+        current_metric_rounds = 'reactiverc[Mean]'
+        comparison_metric_rounds = 'classicrc[Mean]'
+        title = f'Round count when {label_for("speed")}={beautifyValue(speed)}'
+        ydata = {
+            f'f={beautifyValue(label)}': (data.sel(selector)[current_metric_rounds], 0)
+            for label in data['reactivity'].values
+            for selector in [{ 'reactivity': label }]
+        }
+        fig, ax = make_line_chart(
+            title = title,
+            xdata = timeline,
+            xlabel = unit_for(timeColumnName),
+            ylabel = "Mean round count",
+            ydata = ydata,
+            colors = cmx.viridis,
+            linewidth='2'
+        )
+        ax.plot(timeline, data.sel({'reactivity': 1.0})[comparison_metric_rounds], label='classic', color='red', linewidth='3')
+        ax.legend()
+        fig.savefig(f'{output_directory}/rounds_speed{beautifyValue(speed)}.pdf')
+        # Rounds stdev
+        current_metric_rounds = 'reactiverc[StandardDeviation]'
+        comparison_metric_rounds = 'classicrc[StandardDeviation]'
+        title = f'Round count standard deviation when {label_for("speed")}={beautifyValue(speed)}'
+        ydata = {
+            f'f={beautifyValue(label)}': (data.sel(selector)[current_metric_rounds], 0)
+            for label in data['reactivity'].values
+            for selector in [{ 'reactivity': label }]
+        }
+        fig, ax = make_line_chart(
+            title = title,
+            xdata = timeline,
+            xlabel = unit_for(timeColumnName),
+            ylabel = "Round count standard deviation",
+            ydata = ydata,
+            colors = cmx.viridis,
+            linewidth='2'
+        )
+        ax.plot(timeline, data.sel({'reactivity': 1.0})[comparison_metric_rounds], label='classic', color='red', linewidth='3')
+        ax.legend()
+        fig.savefig(f'{output_directory}/rounds_std_speed{beautifyValue(speed)}.pdf')
