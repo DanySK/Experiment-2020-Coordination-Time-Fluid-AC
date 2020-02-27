@@ -8,3 +8,4 @@ data_summary_*
 timeprocessed
 out/
 test.txt
+charts/
