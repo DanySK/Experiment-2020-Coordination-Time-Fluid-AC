@@ -430,6 +430,7 @@ if __name__ == '__main__':
         )
         ax.plot(timeline, data.sel({'reactivity': 1.0})[comparison_metric], label='classic', color='red', linewidth='3')
         ax.set_yscale('log')
+        fig.tight_layout()
         ax.legend()
         fig.savefig(f'{output_directory}/error_speed{beautifyValue(speed)}.pdf')
         # Rounds
@@ -451,6 +452,7 @@ if __name__ == '__main__':
             linewidth='2'
         )
         ax.plot(timeline, data.sel({'reactivity': 1.0})[comparison_metric_rounds], label='classic', color='red', linewidth='3')
+        fig.tight_layout()
         ax.legend()
         fig.savefig(f'{output_directory}/rounds_speed{beautifyValue(speed)}.pdf')
         # Rounds stdev
@@ -472,5 +474,6 @@ if __name__ == '__main__':
             linewidth='2'
         )
         ax.plot(timeline, data.sel({'reactivity': 1.0})[comparison_metric_rounds], label='classic', color='red', linewidth='3')
+        fig.tight_layout()
         ax.legend()
         fig.savefig(f'{output_directory}/rounds_std_speed{beautifyValue(speed)}.pdf')
